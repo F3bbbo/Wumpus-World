@@ -1,22 +1,31 @@
 package wumpusworld;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-public class NeuralNetwork {
+public class NeuralNetwork implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ArrayList<Neuron> inputLayer;
 	private ArrayList<Neuron> outputLayer;
 	
 	public NeuralNetwork() 
 	{
 		inputLayer = new ArrayList<Neuron>();
-		for(int i = 0; i < 16; i++) {
+		outputLayer = new ArrayList<Neuron>();
+	}
+	
+	public NeuralNetwork(int input, int output) {
+		this();//Calling default constructor
+		for(int i = 0; i < input; i++) {
 			Neuron neuron = new Neuron(16 + 16 + 16 + 4);
 			inputLayer.add(neuron);
 		}
 		
-		outputLayer = new ArrayList<Neuron>();
-		for(int i = 0; i < 4; i++) {
+		for(int i = 0; i < output; i++) {
 			Neuron neuron = new Neuron(16);
-			inputLayer.add(neuron);
+			outputLayer.add(neuron);
 		}
 	}
 	
@@ -39,6 +48,19 @@ public class NeuralNetwork {
 			}
 		}
 		return index;
+	}
+	
+	public NeuralNetwork breed(NeuralNetwork other, float mutationRate) {
+		NeuralNetwork child = new NeuralNetwork();
+		for(int i = 0; i < inputLayer.size(); i++) {//Breed all nodes in inputLayer
+			child.inputLayer.add(inputLayer.get(i).breed(other.inputLayer.get(i), mutationRate));
+		}
+		
+		for(int i = 0; i < outputLayer.size(); i++) {//Breed all nodes in outputLayer
+			child.outputLayer.add(outputLayer.get(i).breed(other.outputLayer.get(i), mutationRate));
+		}
+		
+		return child;
 	}
 }
 
