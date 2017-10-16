@@ -1,4 +1,12 @@
 package wumpusworld;
+import java.util.ArrayList;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 /**
  * Contains starting code for creating your own Wumpus World agent.
@@ -12,7 +20,7 @@ public class MyAgent implements Agent,Comparable<MyAgent>
     private NeuralNetwork brain;
     private int bestScore;
     int rnd;
-    
+    EasyWumpusWorldForNeuralNetwork Wumpusworld; 
     /**
      * Creates a new instance of your solver agent.
      * 
@@ -20,6 +28,9 @@ public class MyAgent implements Agent,Comparable<MyAgent>
      */
     public MyAgent(World world)
     {
+        w = world;   
+         Wumpusworld= new EasyWumpusWorldForNeuralNetwork();
+        
         w = world;
         brain = new NeuralNetwork(16, 4);
         bestScore = -Integer.MAX_VALUE;
@@ -28,6 +39,7 @@ public class MyAgent implements Agent,Comparable<MyAgent>
     public MyAgent(World world, NeuralNetwork network) {
     	w = world;
     	brain = network;
+        Wumpusworld= new EasyWumpusWorldForNeuralNetwork();
     	bestScore = -Integer.MAX_VALUE;
     }
     
@@ -45,10 +57,6 @@ public class MyAgent implements Agent,Comparable<MyAgent>
         //Location of the player
         int cX = w.getPlayerX();
         int cY = w.getPlayerY();
-        
-        
-        //Basic action:
-        //Grab Gold if we can.
         if (w.hasGlitter(cX, cY))
         {
             w.doAction(World.A_GRAB);
@@ -62,40 +70,12 @@ public class MyAgent implements Agent,Comparable<MyAgent>
             w.doAction(World.A_CLIMB);
             return;
         }
+        Wumpusworld.UpdateWorldmap(w,cX,cY);
         
-        //Test the environment
-        if (w.hasBreeze(cX, cY))
-        {
-            System.out.println("I am in a Breeze");
-        }
-        if (w.hasStench(cX, cY))
-        {
-            System.out.println("I am in a Stench");
-        }
-        if (w.hasPit(cX, cY))
-        {
-            System.out.println("I am in a Pit");
-        }
-        if (w.getDirection() == World.DIR_RIGHT)
-        {
-            System.out.println("I am facing Right");
-        }
-        if (w.getDirection() == World.DIR_LEFT)
-        {
-            System.out.println("I am facing Left");
-        }
-        if (w.getDirection() == World.DIR_UP)
-        {
-            System.out.println("I am facing Up");
-        }
-        if (w.getDirection() == World.DIR_DOWN)
-        {
-            System.out.println("I am facing Down");
-        }
-        
-        //decide next move
-        rnd = decideRandomMove();
-        if (rnd==0)
+         rnd=brain.process(Wumpusworld.returnworldmap(w));
+        //Basic action:
+        //Grab Gold if we can.
+         if (rnd==0)
         {
             w.doAction(World.A_TURN_LEFT);
             w.doAction(World.A_MOVE);
@@ -117,7 +97,10 @@ public class MyAgent implements Agent,Comparable<MyAgent>
         {
             w.doAction(World.A_TURN_RIGHT);
             w.doAction(World.A_MOVE);
-        }       
+        }
+                
+        
+               
     }    
     
      /**
@@ -128,6 +111,29 @@ public class MyAgent implements Agent,Comparable<MyAgent>
       return (int)(Math.random() * 4);
     }
     
+    public void saveToFile() {
+    	try {
+    	//Write object to file
+    	NeuralNetwork brain = new NeuralNetwork(16, 4);
+    	FileOutputStream fout = new FileOutputStream("NeuralNetwork.ser", true);
+    	ObjectOutputStream oos = new ObjectOutputStream(fout);
+		oos.writeObject(brain);
+		oos.close();
+		
+		//Read object from file
+		FileInputStream fis = new FileInputStream("NeuralNetwork.ser");
+		ObjectInputStream ois = new ObjectInputStream(fis);
+		NeuralNetwork brainClone = (NeuralNetwork) ois.readObject();
+		ois.close();
+		
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+    }
     public void setBestScore(int score)
     {
     	bestScore = score;

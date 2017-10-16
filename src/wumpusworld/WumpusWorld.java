@@ -23,7 +23,7 @@ public class WumpusWorld {
     {
         WumpusWorld ww = new WumpusWorld();
     }
-    
+
     /**
      * Starts the program.
      * 
@@ -99,6 +99,7 @@ public class WumpusWorld {
      */
     private int runSimulation(World w)
     {
+        
         int actions = 0;
         Agent a = new MyAgent(w);
         while (!w.gameOver())

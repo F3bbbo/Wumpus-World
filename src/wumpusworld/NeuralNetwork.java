@@ -1,7 +1,12 @@
 package wumpusworld;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-public class NeuralNetwork {
+public class NeuralNetwork implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ArrayList<Neuron> inputLayer;
 	private ArrayList<Neuron> outputLayer;
 	
@@ -20,7 +25,7 @@ public class NeuralNetwork {
 		
 		for(int i = 0; i < output; i++) {
 			Neuron neuron = new Neuron(16);
-			inputLayer.add(neuron);
+			outputLayer.add(neuron);
 		}
 	}
 	
