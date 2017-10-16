@@ -16,7 +16,7 @@ public class Neuron implements Serializable {
 	
 	public Neuron(int childs) {
 		w = new ArrayList<Float>();
-		for(int i = 0; i < childs; i++) {
+		for(int i = 0; i < childs+1; i++) {
 			w.add((float)(Math.random() * 2) - 1);
 		}
 	}
@@ -33,12 +33,12 @@ public class Neuron implements Serializable {
 		return sigmoid(sum);
 	}
 	
-	public Neuron breed(Neuron other, float mutationRate) {
-		
+	public Neuron breed(Neuron other, double mutationRate) {	
 		Neuron child = new Neuron();
 		for(int i = 0; i < w.size(); i++) {
-			if(mutationRate < Math.random()) {
+			if(mutationRate > Math.random()) {
 				child.w.add((float)(Math.random()*2-1));//Random Mutation
+				//System.out.println(i);
 			}
 			else {
 				if(Math.random() < 0.5) {

@@ -257,14 +257,14 @@ public class GUI implements ActionListener
                 i--;
                 w = maps.get(i).generateWorld();
             }
-            agent = new MyAgent(w);
+            agent = new MyAgent(w, "NeuralNetwork.ser");
             updateGame();
         }
         if (e.getActionCommand().equals("AGENT"))
         {
             if (agent == null)
             {
-                agent = new MyAgent(w);
+                agent = new MyAgent(w, "NeuralNetwork.ser");
             }
             agent.doAction();
             updateGame();

@@ -34,7 +34,7 @@ public class WumpusWorld {
         
         if (option.equalsIgnoreCase("gui"))
         {
-        	runTrainer();
+        	//runTrainer();
             showGUI();
         }
         if (option.equalsIgnoreCase("sim"))
@@ -101,7 +101,7 @@ public class WumpusWorld {
     {
         
         int actions = 0;
-        Agent a = new MyAgent(w);
+        Agent a = new MyAgent(w, "NeuralNetwork.ser");
         while (!w.gameOver())
         {
             a.doAction();
@@ -116,46 +116,47 @@ public class WumpusWorld {
     {
         MapReader mr = new MapReader();
         Vector<WorldMap> maps = mr.readMaps();
-        int PopulationSize = 10;
+        int PopulationSize = 20;
         ArrayList<MyAgent> pop = new ArrayList<MyAgent>();
         //Create start population
         for(int i = 0; i < PopulationSize; i++)
         {
-        	World w = maps.get(1).generateWorld();
+        	World w = maps.get(0).generateWorld();
         	pop.add(new MyAgent(w));
         	pop.get(i).setBestScore(runTrainingSim(w, pop.get(i))); 
         }
         //Sort
-        Collections.sort(pop);
-        int iter = 0;
-        while(iter < 10)
+        Collections.sort(pop, Collections.reverseOrder());
+        int gen = 0;
+        while(gen < 10)
         {
 	        //Breed
-	        for(int i = 0;i+1 < pop.size(); i+=2)
+	        for(int i = 0;i+1 < PopulationSize; i+=2)
 	        {
-	        	World w = maps.get(1).generateWorld();
-	        	NeuralNetwork nn = pop.get(i).breed(pop.get(i+1), (float) 0.02);
-	        	pop.add(new MyAgent(w, nn));
-	        	pop.get(i).setBestScore(runTrainingSim(w, pop.get(i)));
+	        	World w = maps.get(0).generateWorld();
+	        	NeuralNetwork nn = pop.get(i).breed(pop.get(i+1), 0.02);
+	        	MyAgent a = new MyAgent(w, nn);
+	        	int score = runTrainingSim(w, a);
+	        	a.setBestScore(score);
+	        	pop.add(a);
 	        }
 	        //Sort
-	        Collections.sort(pop);
-	        //Remove bad pop
-	        for(int i = pop.size()-1; i > 9; i--)
+	        Collections.sort(pop, Collections.reverseOrder());
+	        //Remove bad population
+	        for(int i = pop.size()-1; i > PopulationSize-1; i--)
 	        {
 	        	pop.remove(i);
 	        }
-	        iter++;
-	        System.out.println("Gen: " + iter + " Score: " + pop.get(0).getBestScore());
+	        gen++;
+	        System.out.println("Gen: " + gen + " Score: " + pop.get(0).getBestScore());
         }
-        
-        
+        pop.get(0).saveToFile();    
     }
     
     private int runTrainingSim(World w, MyAgent a)
     {
     	int actions = 0;   	
-    	while (!w.gameOver() || actions < 100)
+    	while (!w.gameOver() && actions < 10000)
     	{
     		a.doAction();
     		actions++;

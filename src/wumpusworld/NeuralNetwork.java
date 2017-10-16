@@ -19,7 +19,7 @@ public class NeuralNetwork implements Serializable{
 	public NeuralNetwork(int input, int output) {
 		this();//Calling default constructor
 		for(int i = 0; i < input; i++) {
-			Neuron neuron = new Neuron(16 + 16 + 16 + 4);
+			Neuron neuron = new Neuron(68);
 			inputLayer.add(neuron);
 		}
 		
@@ -50,7 +50,7 @@ public class NeuralNetwork implements Serializable{
 		return index;
 	}
 	
-	public NeuralNetwork breed(NeuralNetwork other, float mutationRate) {
+	public NeuralNetwork breed(NeuralNetwork other, double mutationRate) {
 		NeuralNetwork child = new NeuralNetwork();
 		for(int i = 0; i < inputLayer.size(); i++) {//Breed all nodes in inputLayer
 			child.inputLayer.add(inputLayer.get(i).breed(other.inputLayer.get(i), mutationRate));

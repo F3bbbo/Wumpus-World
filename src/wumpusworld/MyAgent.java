@@ -29,7 +29,7 @@ public class MyAgent implements Agent,Comparable<MyAgent>
     public MyAgent(World world)
     {
         w = world;   
-         Wumpusworld= new EasyWumpusWorldForNeuralNetwork();
+        Wumpusworld= new EasyWumpusWorldForNeuralNetwork();
         
         w = world;
         brain = new NeuralNetwork(16, 4);
@@ -43,7 +43,14 @@ public class MyAgent implements Agent,Comparable<MyAgent>
     	bestScore = -Integer.MAX_VALUE;
     }
     
-    public NeuralNetwork breed(MyAgent other, float mutationRate) {
+    public MyAgent(World world, String fileName) {
+    	w = world;
+    	readFromFile(fileName);
+        Wumpusworld = new EasyWumpusWorldForNeuralNetwork();
+    	bestScore = -Integer.MAX_VALUE;
+    }
+    
+    public NeuralNetwork breed(MyAgent other, double mutationRate) {
     	return brain.breed(other.brain, mutationRate);
     }
    
@@ -114,26 +121,37 @@ public class MyAgent implements Agent,Comparable<MyAgent>
     public void saveToFile() {
     	try {
     	//Write object to file
-    	NeuralNetwork brain = new NeuralNetwork(16, 4);
     	FileOutputStream fout = new FileOutputStream("NeuralNetwork.ser", true);
     	ObjectOutputStream oos = new ObjectOutputStream(fout);
 		oos.writeObject(brain);
 		oos.close();
-		
-		//Read object from file
-		FileInputStream fis = new FileInputStream("NeuralNetwork.ser");
-		ObjectInputStream ois = new ObjectInputStream(fis);
-		NeuralNetwork brainClone = (NeuralNetwork) ois.readObject();
-		ois.close();
+	
+
 		
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		}
     }
+    public void readFromFile(String fileName)
+    {
+    	try {
+    		//Read object from file
+    		FileInputStream fis = new FileInputStream(fileName);
+    		ObjectInputStream ois = new ObjectInputStream(fis);
+    		brain = (NeuralNetwork) ois.readObject();
+    		ois.close();
+    		
+    		} catch (FileNotFoundException e) {
+    			e.printStackTrace();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		} catch (ClassNotFoundException e) {
+    			e.printStackTrace();
+    		}
+    }
+    
     public void setBestScore(int score)
     {
     	bestScore = score;
