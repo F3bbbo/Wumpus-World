@@ -6,10 +6,11 @@ package wumpusworld;
  * 
  * @author Johan Hagelbäck
  */
-public class MyAgent implements Agent
+public class MyAgent implements Agent,Comparable<MyAgent>
 {
     private World w;
     private NeuralNetwork brain;
+    private int bestScore;
     int rnd;
     
     /**
@@ -21,11 +22,13 @@ public class MyAgent implements Agent
     {
         w = world;
         brain = new NeuralNetwork(16, 4);
+        bestScore = -Integer.MAX_VALUE;
     }
     
     public MyAgent(World world, NeuralNetwork network) {
     	w = world;
     	brain = network;
+    	bestScore = -Integer.MAX_VALUE;
     }
     
     public NeuralNetwork breed(MyAgent other, float mutationRate) {
@@ -124,6 +127,22 @@ public class MyAgent implements Agent
     {
       return (int)(Math.random() * 4);
     }
+    
+    public void setBestScore(int score)
+    {
+    	bestScore = score;
+    }
+    
+    public int getBestScore()
+    {
+    	return bestScore;
+    }
+
+	@Override
+	public int compareTo(MyAgent other) {
+		// TODO Auto-generated method stub
+		return bestScore-other.bestScore;
+	}
     
     
 }

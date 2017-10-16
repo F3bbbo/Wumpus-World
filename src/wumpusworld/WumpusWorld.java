@@ -1,5 +1,9 @@
 package wumpusworld;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 /**
  * Starting class for the Wumpus World program. The program
@@ -30,6 +34,7 @@ public class WumpusWorld {
         
         if (option.equalsIgnoreCase("gui"))
         {
+        	runTrainer();
             showGUI();
         }
         if (option.equalsIgnoreCase("sim"))
@@ -104,5 +109,57 @@ public class WumpusWorld {
         int score = w.getScore();
         System.out.println("Simulation ended after " + actions + " actions. Score " + score);
         return score;
+    }
+    
+    private void runTrainer()
+    {
+        MapReader mr = new MapReader();
+        Vector<WorldMap> maps = mr.readMaps();
+        int PopulationSize = 10;
+        ArrayList<MyAgent> pop = new ArrayList<MyAgent>();
+        //Create start population
+        for(int i = 0; i < PopulationSize; i++)
+        {
+        	World w = maps.get(1).generateWorld();
+        	pop.add(new MyAgent(w));
+        	pop.get(i).setBestScore(runTrainingSim(w, pop.get(i))); 
+        }
+        //Sort
+        Collections.sort(pop);
+        int iter = 0;
+        while(iter < 10)
+        {
+	        //Breed
+	        for(int i = 0;i+1 < pop.size(); i+=2)
+	        {
+	        	World w = maps.get(1).generateWorld();
+	        	NeuralNetwork nn = pop.get(i).breed(pop.get(i+1), (float) 0.02);
+	        	pop.add(new MyAgent(w, nn));
+	        	pop.get(i).setBestScore(runTrainingSim(w, pop.get(i)));
+	        }
+	        //Sort
+	        Collections.sort(pop);
+	        //Remove bad pop
+	        for(int i = pop.size()-1; i > 9; i--)
+	        {
+	        	pop.remove(i);
+	        }
+	        iter++;
+	        System.out.println("Gen: " + iter + " Score: " + pop.get(0).getBestScore());
+        }
+        
+        
+    }
+    
+    private int runTrainingSim(World w, MyAgent a)
+    {
+    	int actions = 0;   	
+    	while (!w.gameOver() || actions < 100)
+    	{
+    		a.doAction();
+    		actions++;
+    	}
+    	int score = w.getScore();
+    	return score;
     }
 }
