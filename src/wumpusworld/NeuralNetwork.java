@@ -26,6 +26,19 @@ public class NeuralNetwork {
 		}
 		return index;
 	}
+	
+	public NeuralNetwork breed(NeuralNetwork other, float mutationRate) {
+		NeuralNetwork child = new NeuralNetwork();
+		for(int i = 0; i < inputLayer.size(); i++) {//Breed all nodes in inputLayer
+			child.inputLayer.add(inputLayer.get(i).breed(other.inputLayer.get(i), mutationRate));
+		}
+		
+		for(int i = 0; i < outputLayer.size(); i++) {//Breed all nodes in outputLayer
+			child.outputLayer.add(outputLayer.get(i).breed(other.outputLayer.get(i), mutationRate));
+		}
+		
+		return child;
+	}
 }
 
 

@@ -16,4 +16,23 @@ public class Neuron {
 		}
 		return sigmoid(sum);
 	}
+	
+	public Neuron breed(Neuron other, float mutationRate) {
+		
+		Neuron child = new Neuron();
+		for(int i = 0; i < w.size(); i++) {
+			if(mutationRate < Math.random()) {
+				child.w.add((float)(Math.random()*2-1));//Random Mutation
+			}
+			else {
+				if(Math.random() < 0.5) {
+					child.w.add(w.get(i));//Inherent this w value
+				}
+				else {
+					child.w.add(other.w.get(i));//Inherent other w value
+				}
+			}
+		}		
+		return child;
+	}
 }
