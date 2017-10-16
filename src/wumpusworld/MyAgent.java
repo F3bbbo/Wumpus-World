@@ -1,5 +1,12 @@
 package wumpusworld;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 /**
  * Contains starting code for creating your own Wumpus World agent.
  * Currently the agent only make a random decision each turn.
@@ -114,6 +121,28 @@ public class MyAgent implements Agent
       return (int)(Math.random() * 4);
     }
     
-    
+    public void saveToFile() {
+    	try {
+    	//Write object to file
+    	NeuralNetwork brain = new NeuralNetwork(16, 4);
+    	FileOutputStream fout = new FileOutputStream("NeuralNetwork.ser", true);
+    	ObjectOutputStream oos = new ObjectOutputStream(fout);
+		oos.writeObject(brain);
+		oos.close();
+		
+		//Read object from file
+		FileInputStream fis = new FileInputStream("NeuralNetwork.ser");
+		ObjectInputStream ois = new ObjectInputStream(fis);
+		NeuralNetwork brainClone = (NeuralNetwork) ois.readObject();
+		ois.close();
+		
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+    }
 }
 
