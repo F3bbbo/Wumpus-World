@@ -37,6 +37,7 @@ public class MyAgent implements Agent
     public MyAgent(World world, NeuralNetwork network) {
     	w = world;
     	brain = network;
+        Wumpusworld= new EasyWumpusWorldForNeuralNetwork();
     }
     
     public NeuralNetwork breed(MyAgent other, float mutationRate) {
@@ -67,7 +68,8 @@ public class MyAgent implements Agent
             return;
         }
         Wumpusworld.UpdateWorldmap(w,cX,cY);
-         Wumpusworld.returnworldmap(w);
+        Wumpusworld.returnworldmap(w);
+     
         //Basic action:
         //Grab Gold if we can.
     
