@@ -12,15 +12,15 @@ import java.util.ArrayList;
  * @author Dean
  */
 public class EasyWumpusWorldForNeuralNetwork {
-     private ArrayList<Integer> Worldmap;
+     private ArrayList<Float> Worldmap;
    
      
      public EasyWumpusWorldForNeuralNetwork()
      {
          int test = 0;
-         Worldmap = new ArrayList<Integer>();
+         Worldmap = new ArrayList<Float>();
          for(int i = 0;i<16+16+16+16+4;i++)
-         Worldmap.add(0);
+         Worldmap.add((float)0);
          //0-15 = knownplaces 16-31 bresses 32-47 stenches 48+16 Position 63+4 riktning
          
      }
@@ -51,63 +51,63 @@ public class EasyWumpusWorldForNeuralNetwork {
           //setsposition
         for(int i = 0;i<16;i++)
         {
-           Worldmap.set(47+1+i, 0); 
+           Worldmap.set(47+1+i, (float)0); 
         }
      
-           Worldmap.set(47+arrayvalue+arrayvaluex+1, 1);
+           Worldmap.set(47+arrayvalue+arrayvaluex+1, (float)1);
         
            
              for(int i = 0;i<4;i++)
         {
-           Worldmap.set(63+i+1, 0); 
+           Worldmap.set(63+i+1, (float)0); 
         }
         if (w.getDirection() == World.DIR_RIGHT)
         {
-           Worldmap.set(63+1, 1);
+           Worldmap.set(63+1, (float)1);
         }
         if (w.getDirection() == World.DIR_LEFT)
         {
-           Worldmap.set(63+2,1);
+           Worldmap.set(63+2,(float)1);
         }
         if (w.getDirection() == World.DIR_UP)
         {
-            Worldmap.set(63+3, 1);
+            Worldmap.set(63+3, (float)1);
         }
         if (w.getDirection() == World.DIR_DOWN)
         {
-           Worldmap.set(63+4, 1);
+           Worldmap.set(63+4, (float)1);
         }
         
         
-        if(Worldmap.get(arrayvalue+arrayvaluex) ==1)
+        if(Worldmap.get(arrayvalue+arrayvaluex) ==(float)1)
         {
             return;
         }
         else
         {
-            Worldmap.set(arrayvalue+arrayvaluex,1);
+            Worldmap.set(arrayvalue+arrayvaluex,(float)1);
         }
         
         
         if (w.hasBreeze(cX, cY))
         {
-            Worldmap.set(15+arrayvalue+arrayvaluex+1, 1);
+            Worldmap.set(15+arrayvalue+arrayvaluex+1, (float)1);
         }
         if (w.hasStench(cX, cY))
         {
-          Worldmap.set(31+arrayvalue+arrayvaluex+1, 1);
+          Worldmap.set(31+arrayvalue+arrayvaluex+1, (float)1);
         }
    
         
         
     }
- public ArrayList<Integer> returnworldmap(World w)
+ public ArrayList<Float> returnworldmap(World w)
     {
        
         return Worldmap;
     }
     
-     public ArrayList<Integer> printreturnworldmap(World w)
+     public ArrayList<Float> printreturnworldmap(World w)
     {
          for(int i = 0;i<4;i++)
          {

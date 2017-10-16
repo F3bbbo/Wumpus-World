@@ -68,11 +68,34 @@ public class MyAgent implements Agent
             return;
         }
         Wumpusworld.UpdateWorldmap(w,cX,cY);
-        Wumpusworld.returnworldmap(w);
-     
+        
+         rnd=brain.process(Wumpusworld.returnworldmap(w));
         //Basic action:
         //Grab Gold if we can.
-    
+         if (rnd==0)
+        {
+            w.doAction(World.A_TURN_LEFT);
+            w.doAction(World.A_MOVE);
+        }
+        
+        if (rnd==1)
+        {
+            w.doAction(World.A_MOVE);
+        }
+                
+        if (rnd==2)
+        {
+            w.doAction(World.A_TURN_LEFT);
+            w.doAction(World.A_TURN_LEFT);
+            w.doAction(World.A_MOVE);
+        }
+                        
+        if (rnd==3)
+        {
+            w.doAction(World.A_TURN_RIGHT);
+            w.doAction(World.A_MOVE);
+        }
+                
         
                
     }    
