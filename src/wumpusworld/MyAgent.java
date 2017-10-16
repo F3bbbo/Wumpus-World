@@ -9,6 +9,7 @@ package wumpusworld;
 public class MyAgent implements Agent
 {
     private World w;
+    private NeuralNetwork brain;
     int rnd;
     
     /**
@@ -18,7 +19,17 @@ public class MyAgent implements Agent
      */
     public MyAgent(World world)
     {
-        w = world;   
+        w = world;
+        brain = new NeuralNetwork(16, 4);
+    }
+    
+    public MyAgent(World world, NeuralNetwork network) {
+    	w = world;
+    	brain = network;
+    }
+    
+    public NeuralNetwork breed(MyAgent other, float mutationRate) {
+    	return brain.breed(other.brain, mutationRate);
     }
    
             

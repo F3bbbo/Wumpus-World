@@ -13,7 +13,6 @@ public class NeuralNetwork {
 	
 	public NeuralNetwork(int input, int output) {
 		this();//Calling default constructor
-		
 		for(int i = 0; i < input; i++) {
 			Neuron neuron = new Neuron(16 + 16 + 16 + 4);
 			inputLayer.add(neuron);
