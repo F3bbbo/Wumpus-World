@@ -1,10 +1,24 @@
 package wumpusworld;
 
 import java.util.ArrayList;
-
 public class NeuralNetwork {
 	private ArrayList<Neuron> inputLayer;
 	private ArrayList<Neuron> outputLayer;
+	
+	public NeuralNetwork() 
+	{
+		inputLayer = new ArrayList<Neuron>();
+		for(int i = 0; i < 16; i++) {
+			Neuron neuron = new Neuron(16 + 16 + 16 + 4);
+			inputLayer.add(neuron);
+		}
+		
+		outputLayer = new ArrayList<Neuron>();
+		for(int i = 0; i < 4; i++) {
+			Neuron neuron = new Neuron(16);
+			inputLayer.add(neuron);
+		}
+	}
 	
 	public int process(ArrayList<Float> input) {
 		ArrayList<Float> firstResult = new ArrayList<Float>();
