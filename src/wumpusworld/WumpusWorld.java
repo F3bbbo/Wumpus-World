@@ -34,7 +34,7 @@ public class WumpusWorld {
         
         if (option.equalsIgnoreCase("gui"))
         {
-        	//runTrainer();
+        	runTrainerRandom();
             showGUI();
         }
         if (option.equalsIgnoreCase("sim"))
@@ -138,6 +138,51 @@ public class WumpusWorld {
 	        	MyAgent a = new MyAgent(w, nn);
 	        	int score = runTrainingSim(w, a);
 	        	a.setBestScore(score);
+	        	pop.add(a);
+	        }
+	        //Sort
+	        Collections.sort(pop, Collections.reverseOrder());
+	        //Remove bad population
+	        for(int i = pop.size()-1; i > PopulationSize-1; i--)
+	        {
+	        	pop.remove(i);
+	        }
+	        gen++;
+	        System.out.println("Gen: " + gen + " Score: " + pop.get(0).getBestScore());
+        }
+        pop.get(0).saveToFile();    
+    }
+    
+    private void runTrainerRandom()
+    {
+        int PopulationSize = 200;
+        ArrayList<MyAgent> pop = new ArrayList<MyAgent>();
+        //Create start population
+        for(int i = 0; i < PopulationSize; i++)
+        {
+        
+        	World w = MapGenerator.getRandomMap(i).generateWorld();
+        	pop.add(new MyAgent(w));
+        	pop.get(i).setBestScore(runTrainingSim(w, pop.get(i))); 
+        }
+        //Sort
+        Collections.sort(pop, Collections.reverseOrder());
+        int gen = 0;
+        while(gen < 10)
+        {
+	        //Breed
+	        for(int i = 0;i+1 < PopulationSize; i+=2)
+	        {
+	        	NeuralNetwork nn = pop.get(i).breed(pop.get(i+1), 0.02);
+	        	int score = 0;
+	        	MyAgent a = new MyAgent();
+	        	for(int j = 0; j < 5; j++)
+	        	{
+		        	World ww = MapGenerator.getRandomMap(j).generateWorld();
+		        	a = new MyAgent(ww, nn);
+		        	score += runTrainingSim(ww, a);
+	        	}
+	        	a.setBestScore(score/5);
 	        	pop.add(a);
 	        }
 	        //Sort

@@ -36,6 +36,15 @@ public class MyAgent implements Agent,Comparable<MyAgent>
         bestScore = -Integer.MAX_VALUE;
     }
     
+    public MyAgent()
+    {
+    	w = null;
+    	brain = null;
+    	Wumpusworld = null;
+    	bestScore = 1337;
+    }
+    
+    
     public MyAgent(World world, NeuralNetwork network) {
     	w = world;
     	brain = network;
