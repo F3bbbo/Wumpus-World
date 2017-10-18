@@ -155,7 +155,7 @@ public class WumpusWorld {
     
     private void runTrainerRandom()
     {
-        int PopulationSize = 40;
+        int PopulationSize = 100;
         int NumberOfMaps = 20;
         ArrayList<MyAgent> pop = new ArrayList<MyAgent>();
         //Create start population
@@ -177,6 +177,8 @@ public class WumpusWorld {
         Collections.sort(pop, Collections.reverseOrder());
         int gen = 1;
         System.out.println("Gen: " + gen + " Score: " + pop.get(0).getBestScore());
+        String fileName = "Beginner" + "NeuralNetworkP" + Integer.toString(PopulationSize) + "M" + Integer.toString(NumberOfMaps);
+        pop.get(0).saveToFile(fileName);
         while(true)
         {
 	        //Breed
@@ -205,7 +207,8 @@ public class WumpusWorld {
 	        }
 	        gen++;
 	        System.out.println("Gen: " + gen + " Score: " + pop.get(0).getBestScore());
-	        pop.get(0).saveToFile();
+	        fileName = "Trained" + "NeuralNetworkP" + Integer.toString(PopulationSize) + "M" + Integer.toString(NumberOfMaps);
+	        pop.get(0).saveToFile(fileName);
         }   
     }
     
