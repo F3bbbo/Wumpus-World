@@ -16,6 +16,8 @@ import java.io.ObjectOutputStream;
  */
 public class MyAgent implements Agent,Comparable<MyAgent>
 {
+	private static final int INPUTLAYERSIZE = 32;
+	private static final int OUTPUTSIZE = 4;
     private World w;
     private NeuralNetwork brain;
     private int bestScore;
@@ -30,14 +32,14 @@ public class MyAgent implements Agent,Comparable<MyAgent>
     {
         w = world;   
         Wumpusworld= new EasyWumpusWorldForNeuralNetwork();
-        brain = new NeuralNetwork(16, 4);
+        brain = new NeuralNetwork(INPUTLAYERSIZE, OUTPUTSIZE);
         bestScore = -Integer.MAX_VALUE;
     }
     
     public MyAgent()
     {
     	w = null;
-    	brain = new NeuralNetwork(16, 4);;
+    	brain = new NeuralNetwork(INPUTLAYERSIZE, OUTPUTSIZE);;
     	Wumpusworld =  new EasyWumpusWorldForNeuralNetwork();
     	bestScore = -Integer.MAX_VALUE;
     }
@@ -135,9 +137,13 @@ public class MyAgent implements Agent,Comparable<MyAgent>
     }
     
     public void saveToFile() {
+    	saveToFile("NeuralNetwork.ser");
+    }
+    
+    public void saveToFile(String fileName) {
     	try {
     	//Write object to file
-    	FileOutputStream fout = new FileOutputStream("NeuralNetwork.ser", true);
+    	FileOutputStream fout = new FileOutputStream(fileName, false);
     	ObjectOutputStream oos = new ObjectOutputStream(fout);
 		oos.writeObject(brain);
 		oos.close();
@@ -150,6 +156,7 @@ public class MyAgent implements Agent,Comparable<MyAgent>
 			e.printStackTrace();
 		}
     }
+    
     public void readFromFile(String fileName)
     {
     	try {

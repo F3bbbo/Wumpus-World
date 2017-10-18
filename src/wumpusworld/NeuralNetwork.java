@@ -24,7 +24,7 @@ public class NeuralNetwork implements Serializable{
 		}
 		
 		for(int i = 0; i < output; i++) {
-			Neuron neuron = new Neuron(16);
+			Neuron neuron = new Neuron(input);
 			outputLayer.add(neuron);
 		}
 	}
