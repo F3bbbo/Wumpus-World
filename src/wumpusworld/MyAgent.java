@@ -30,8 +30,6 @@ public class MyAgent implements Agent,Comparable<MyAgent>
     {
         w = world;   
         Wumpusworld= new EasyWumpusWorldForNeuralNetwork();
-        
-        w = world;
         brain = new NeuralNetwork(16, 4);
         bestScore = -Integer.MAX_VALUE;
     }
@@ -39,9 +37,18 @@ public class MyAgent implements Agent,Comparable<MyAgent>
     public MyAgent()
     {
     	w = null;
-    	brain = null;
-    	Wumpusworld = null;
-    	bestScore = 1337;
+    	brain = new NeuralNetwork(16, 4);;
+    	Wumpusworld =  new EasyWumpusWorldForNeuralNetwork();
+    	bestScore = -Integer.MAX_VALUE;
+    }
+    
+    public MyAgent(NeuralNetwork nn)
+    {
+    	w = null;
+    	brain = nn;
+    	Wumpusworld = new EasyWumpusWorldForNeuralNetwork();
+    	bestScore = -Integer.MAX_VALUE;
+    	
     }
     
     
@@ -170,7 +177,18 @@ public class MyAgent implements Agent,Comparable<MyAgent>
     {
     	return bestScore;
     }
-
+    
+    public void reset()
+    {
+    	Wumpusworld = new EasyWumpusWorldForNeuralNetwork();
+    }
+    
+    public void setWorld(World world)
+    {
+    	reset();
+    	w = world;
+    }
+    
 	@Override
 	public int compareTo(MyAgent other) {
 		// TODO Auto-generated method stub

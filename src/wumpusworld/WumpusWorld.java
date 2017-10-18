@@ -155,34 +155,44 @@ public class WumpusWorld {
     
     private void runTrainerRandom()
     {
-        int PopulationSize = 200;
+        int PopulationSize = 50;
+        int NumberOfMaps = 20;
         ArrayList<MyAgent> pop = new ArrayList<MyAgent>();
         //Create start population
         for(int i = 0; i < PopulationSize; i++)
         {
-        
-        	World w = MapGenerator.getRandomMap(i).generateWorld();
-        	pop.add(new MyAgent(w));
-        	pop.get(i).setBestScore(runTrainingSim(w, pop.get(i))); 
+        	int score = 0;
+        	MyAgent a = new MyAgent();
+        	for(int j = 0; j < NumberOfMaps; j++)
+    	    {
+        		int rndNum = (int)(Math.random()*100000);
+        		World w = MapGenerator.getRandomMap(rndNum).generateWorld();
+        		a.setWorld(w);
+        		score += runTrainingSim(w, a);
+    	    }
+        	a.setBestScore(score/NumberOfMaps);
+        	pop.add(a);
         }
         //Sort
         Collections.sort(pop, Collections.reverseOrder());
-        int gen = 0;
-        while(gen < 10)
+        int gen = 1;
+        System.out.println("Gen: " + gen + " Score: " + pop.get(0).getBestScore());
+        while(gen < 100)
         {
 	        //Breed
 	        for(int i = 0;i+1 < PopulationSize; i+=2)
 	        {
-	        	NeuralNetwork nn = pop.get(i).breed(pop.get(i+1), 0.02);
+	        	NeuralNetwork nn = pop.get(i).breed(pop.get(i+1), 0.1);
 	        	int score = 0;
-	        	MyAgent a = new MyAgent();
-	        	for(int j = 0; j < 5; j++)
+	        	MyAgent a = new MyAgent(nn);
+	        	for(int j = 0; j < NumberOfMaps; j++)
 	        	{
-		        	World ww = MapGenerator.getRandomMap(j).generateWorld();
-		        	a = new MyAgent(ww, nn);
+	        		int rndNum = (int)(Math.random()*100000);
+		        	World ww = MapGenerator.getRandomMap(rndNum).generateWorld();
+		        	a.setWorld(ww);
 		        	score += runTrainingSim(ww, a);
 	        	}
-	        	a.setBestScore(score/5);
+	        	a.setBestScore(score/NumberOfMaps);
 	        	pop.add(a);
 	        }
 	        //Sort
