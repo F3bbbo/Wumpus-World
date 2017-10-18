@@ -155,7 +155,7 @@ public class WumpusWorld {
     
     private void runTrainerRandom()
     {
-        int PopulationSize = 60;
+        int PopulationSize = 40;
         int NumberOfMaps = 20;
         ArrayList<MyAgent> pop = new ArrayList<MyAgent>();
         //Create start population
@@ -180,9 +180,10 @@ public class WumpusWorld {
         while(true)
         {
 	        //Breed
-	        for(int i = 0;i+1 < PopulationSize; i+=2)
+	        for(int i = 0;i < PopulationSize; i++)
 	        {
-	        	NeuralNetwork nn = pop.get(i).breed(pop.get(i+1), 0.1);
+	        	int randMate = (int) (Math.random() * (PopulationSize-1));
+	        	NeuralNetwork nn = pop.get(i).breed(pop.get(randMate), 0.1);
 	        	int score = 0;
 	        	MyAgent a = new MyAgent(nn);
 	        	for(int j = 0; j < NumberOfMaps; j++)
