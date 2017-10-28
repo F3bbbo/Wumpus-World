@@ -34,7 +34,7 @@ public class WumpusWorld {
         
         if (option.equalsIgnoreCase("gui"))
         {
-        runTrainerRandom();
+        	//runTrainerRandom();
             showGUI();
         }
         if (option.equalsIgnoreCase("sim"))
@@ -101,8 +101,8 @@ public class WumpusWorld {
     {
         
         int actions = 0;
-        //Agent a = new MyAgent(w, "BeginnerNeuralNetworkP40M40");
-        Agent a = new MyAgent(w, "TrainedNeuralNetworkP40M40");
+        //Agent a = new MyAgent(w, "BeginnerNeuralNetwork");
+        Agent a = new MyAgent(w, "TrainedNeuralNetwork");
         while (!w.gameOver() && actions < 10000)
         {
             a.doAction();

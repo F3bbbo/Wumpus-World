@@ -252,7 +252,7 @@ public class GUI implements ActionListener
             if (s.equalsIgnoreCase("Random"))
             {
                 w = MapGenerator.getRandomMap((int)System.currentTimeMillis()).generateWorld();
-                agent = new MyAgent(w, "NeuralNetwork.ser");
+                agent = new MyAgent(w, "TrainedNeuralNetwork");
             }
             else
             {
@@ -270,7 +270,7 @@ public class GUI implements ActionListener
             	String s = (String)mapList.getSelectedItem();
             	if(s.equalsIgnoreCase("Random"))
             	{
-            		agent = new MyAgent(w, "NeuralNetwork.ser");
+            		agent = new MyAgent(w, "TrainedNeuralNetwork");
             	}
             	else
             	{
@@ -366,7 +366,7 @@ public class GUI implements ActionListener
         //Sort
         Collections.sort(pop, Collections.reverseOrder());
         int gen = 0;
-        while(pop.get(0).getBestScore() < 900 && gen < 100)
+        while(pop.get(0).getBestScore() < 900 && gen < 20)
         {
 	        //Breed
 	        for(int i = 0;i < PopulationSize/2; i++)
