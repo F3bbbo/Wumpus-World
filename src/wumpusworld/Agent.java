@@ -12,4 +12,5 @@ public interface Agent
      * Asks the agent to execute an action.
      */
     public void doAction();
+    public void setWorld(World w);
 }

@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Vector;
 
 /**
@@ -250,21 +252,34 @@ public class GUI implements ActionListener
             if (s.equalsIgnoreCase("Random"))
             {
                 w = MapGenerator.getRandomMap((int)System.currentTimeMillis()).generateWorld();
+                agent = new MyAgent(w, "NeuralNetwork.ser");
             }
             else
             {
                 int i = Integer.parseInt(s);
                 i--;
                 w = maps.get(i).generateWorld();
+                agent = null;
             }
-            agent = new MyAgent(w, "NeuralNetwork.ser");
             updateGame();
         }
         if (e.getActionCommand().equals("AGENT"))
         {
             if (agent == null)
             {
-                agent = new MyAgent(w, "NeuralNetwork.ser");
+            	String s = (String)mapList.getSelectedItem();
+            	if(s.equalsIgnoreCase("Random"))
+            	{
+            		agent = new MyAgent(w, "NeuralNetwork.ser");
+            	}
+            	else
+            	{
+            		int i = Integer.parseInt(s);
+                    i--;
+                    agent = runTrainer(i);
+                    agent.setWorld(w);
+            	}
+                
             }
             agent.doAction();
             updateGame();
@@ -332,5 +347,60 @@ public class GUI implements ActionListener
         
         gamepanel.updateUI();
         gamepanel.repaint();
-    }  
+    } 
+    
+    //New functions
+    private MyAgent runTrainer(int mapIndex)
+    {
+        MapReader mr = new MapReader();
+        Vector<WorldMap> maps = mr.readMaps();
+        int PopulationSize = 20;
+        ArrayList<MyAgent> pop = new ArrayList<MyAgent>();
+        //Create start population
+        for(int i = 0; i < PopulationSize; i++)
+        {
+        	World w = maps.get(mapIndex).generateWorld();
+        	pop.add(new MyAgent(w));
+        	pop.get(i).setBestScore(runTrainingSim(w, pop.get(i))); 
+        }
+        //Sort
+        Collections.sort(pop, Collections.reverseOrder());
+        int gen = 0;
+        while(pop.get(0).getBestScore() < 900 && gen < 100)
+        {
+	        //Breed
+	        for(int i = 0;i < PopulationSize/2; i++)
+	        {
+	        	World w = maps.get(mapIndex).generateWorld();
+	        	int randMate = (int) (Math.random() * (PopulationSize-1));
+	        	NeuralNetwork nn = pop.get(i).breed(pop.get(randMate), 0.02);
+	        	MyAgent a = new MyAgent(w, nn);
+	        	int score = runTrainingSim(w, a);
+	        	a.setBestScore(score);
+	        	pop.add(a);
+	        }
+	        //Sort
+	        Collections.sort(pop, Collections.reverseOrder());
+	        //Remove bad population
+	        for(int i = pop.size()-1; i > PopulationSize-1; i--)
+	        {
+	        	pop.remove(i);
+	        }
+	        gen++;
+	        System.out.println("Gen: " + gen + " Score: " + pop.get(0).getBestScore());
+        }
+        return pop.get(0);    
+    }
+    
+    private int runTrainingSim(World w, MyAgent a)
+    {
+    	int actions = 0;   	
+    	while (!w.gameOver() && actions < 10000)
+    	{
+    		a.doAction();
+    		actions++;
+    	}
+    	int score = w.getScore();
+    	return score;
+    }
 }

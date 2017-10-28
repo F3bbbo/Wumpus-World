@@ -17,7 +17,7 @@ import java.io.ObjectOutputStream;
 public class MyAgent implements Agent,Comparable<MyAgent>
 {
 	private static final int INPUTLAYERSIZE = 32;
-	private static final int OUTPUTSIZE = 4;
+	private static final int OUTPUTSIZE = 8;
     private World w;
     private NeuralNetwork brain;
     private int bestScore;
@@ -116,12 +116,37 @@ public class MyAgent implements Agent,Comparable<MyAgent>
             w.doAction(World.A_TURN_LEFT);
             w.doAction(World.A_TURN_LEFT);
             w.doAction(World.A_MOVE);
+        	//w.doAction(World.A_SHOOT);
         }
                         
         if (rnd==3)
         {
             w.doAction(World.A_TURN_RIGHT);
             w.doAction(World.A_MOVE);
+        }
+        
+        if(rnd==4)
+        {
+        	w.doAction(World.A_TURN_LEFT);
+        	w.doAction(World.A_SHOOT);
+        }
+        
+        if(rnd==5)
+        {
+        	w.doAction(World.A_SHOOT);
+        }
+        
+        if(rnd==6)
+        {
+        	w.doAction(World.A_TURN_LEFT);
+            w.doAction(World.A_TURN_LEFT);
+        	w.doAction(World.A_SHOOT);
+        }
+        
+        if(rnd==7)
+        {
+        	w.doAction(World.A_TURN_RIGHT);
+        	w.doAction(World.A_SHOOT);
         }
                 
         

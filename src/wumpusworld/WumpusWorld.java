@@ -101,8 +101,9 @@ public class WumpusWorld {
     {
         
         int actions = 0;
-        Agent a = new MyAgent(w, "NeuralNetwork.ser");
-        while (!w.gameOver())
+        //Agent a = new MyAgent(w, "BeginnerNeuralNetworkP40M40");
+        Agent a = new MyAgent(w, "TrainedNeuralNetworkP40M40");
+        while (!w.gameOver() && actions < 10000)
         {
             a.doAction();
             actions++;
@@ -112,7 +113,7 @@ public class WumpusWorld {
         return score;
     }
     
-    private void runTrainer()
+    private MyAgent runTrainer(int mapIndex)
     {
         MapReader mr = new MapReader();
         Vector<WorldMap> maps = mr.readMaps();
@@ -121,19 +122,19 @@ public class WumpusWorld {
         //Create start population
         for(int i = 0; i < PopulationSize; i++)
         {
-        	World w = maps.get(0).generateWorld();
+        	World w = maps.get(mapIndex).generateWorld();
         	pop.add(new MyAgent(w));
         	pop.get(i).setBestScore(runTrainingSim(w, pop.get(i))); 
         }
         //Sort
         Collections.sort(pop, Collections.reverseOrder());
         int gen = 0;
-        while(gen < 10)
+        while(pop.get(0).getBestScore() < 900)
         {
 	        //Breed
 	        for(int i = 0;i+1 < PopulationSize; i+=2)
 	        {
-	        	World w = maps.get(0).generateWorld();
+	        	World w = maps.get(mapIndex).generateWorld();
 	        	NeuralNetwork nn = pop.get(i).breed(pop.get(i+1), 0.02);
 	        	MyAgent a = new MyAgent(w, nn);
 	        	int score = runTrainingSim(w, a);
@@ -150,13 +151,13 @@ public class WumpusWorld {
 	        gen++;
 	        System.out.println("Gen: " + gen + " Score: " + pop.get(0).getBestScore());
         }
-        pop.get(0).saveToFile();    
+        return pop.get(0);    
     }
     
     private void runTrainerRandom()
     {
-        int PopulationSize = 100;
-        int NumberOfMaps = 20;
+        int PopulationSize = 40;
+        int NumberOfMaps = 40;
         ArrayList<MyAgent> pop = new ArrayList<MyAgent>();
         //Create start population
         for(int i = 0; i < PopulationSize; i++)
@@ -165,9 +166,9 @@ public class WumpusWorld {
         	MyAgent a = new MyAgent();
         	for(int j = 0; j < NumberOfMaps; j++)
     	    {
-        		int rndNum = (int)(Math.random()*100000);
+        		int rndNum = j;//(int)(Math.random()*100000);
         		World w = MapGenerator.getRandomMap(rndNum).generateWorld();
-        		a.setWorld(w);
+        		//a.setWorld(w);
         		score += runTrainingSim(w, a);
     	    }
         	a.setBestScore(score/NumberOfMaps);
@@ -176,8 +177,9 @@ public class WumpusWorld {
         //Sort
         Collections.sort(pop, Collections.reverseOrder());
         int gen = 1;
-        System.out.println("Gen: " + gen + " Score: " + pop.get(0).getBestScore());
-        String fileName = "Beginner" + "NeuralNetworkP" + Integer.toString(PopulationSize) + "M" + Integer.toString(NumberOfMaps);
+        int resultScore = resultTest(pop.get(0));
+        System.out.println("Gen: " + gen + " TrainingScore: " + pop.get(0).getBestScore() + " ResultScore: " + resultScore);
+        String fileName = "Beginner" + "NeuralNetworkTS" + Integer.toString(pop.get(0).getBestScore()) + "RS" + Integer.toString(resultScore);
         pop.get(0).saveToFile(fileName);
         while(true)
         {
@@ -188,11 +190,11 @@ public class WumpusWorld {
 	        	NeuralNetwork nn = pop.get(i).breed(pop.get(randMate), 0.1);
 	        	int score = 0;
 	        	MyAgent a = new MyAgent(nn);
-	        	for(int j = 0; j < NumberOfMaps; j++)
+	        	for(int j = 10; j < (NumberOfMaps+10); j++)
 	        	{
-	        		int rndNum = (int)(Math.random()*100000);
+	        		int rndNum = j;// (int)(Math.random()*100000);
 		        	World ww = MapGenerator.getRandomMap(rndNum).generateWorld();
-		        	a.setWorld(ww);
+		        	//a.setWorld(ww);
 		        	score += runTrainingSim(ww, a);
 	        	}
 	        	a.setBestScore(score/NumberOfMaps);
@@ -206,15 +208,30 @@ public class WumpusWorld {
 	        	pop.remove(i);
 	        }
 	        gen++;
-	        System.out.println("Gen: " + gen + " Score: " + pop.get(0).getBestScore());
-	        fileName = "Trained" + "NeuralNetworkP" + Integer.toString(PopulationSize) + "M" + Integer.toString(NumberOfMaps);
+	        resultScore = resultTest(pop.get(0));
+	        System.out.println("Gen: " + gen + " TrainingScore: " + pop.get(0).getBestScore() + " ResultScore: " + resultScore);
+	        fileName = "Trained" + "NeuralNetworkTS" + Integer.toString(pop.get(0).getBestScore()) + "RS" + Integer.toString(resultScore);
 	        pop.get(0).saveToFile(fileName);
         }   
     }
     
+    private int resultTest(MyAgent a)
+    {
+        double totScore = 0;
+        for (int i = 0; i < 10; i++)
+        {
+            WorldMap w = MapGenerator.getRandomMap(i);
+            totScore += (double)runTrainingSim(w.generateWorld(), a);
+        }
+        totScore = totScore / (double)10;
+        //System.out.println("Average score: " + totScore);
+        return ((int) totScore);
+    }
+    
     private int runTrainingSim(World w, MyAgent a)
     {
-    	int actions = 0;   	
+    	int actions = 0;
+    	a.setWorld(w);
     	while (!w.gameOver() && actions < 10000)
     	{
     		a.doAction();
