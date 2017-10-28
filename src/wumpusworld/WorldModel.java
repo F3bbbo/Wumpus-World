@@ -10,12 +10,15 @@ import java.util.ArrayList;
 /**
  *
  * @author Dean
+/**
+ *
+ * @author Dean
  */
-public class EasyWumpusWorldForNeuralNetwork {
-     private ArrayList<Float> Worldmap;
+public class WorldModel {
+    private ArrayList<Float> Worldmap;
    
      
-     public EasyWumpusWorldForNeuralNetwork()
+     public WorldModel()
      {
          int test = 0;
          Worldmap = new ArrayList<Float>();
@@ -57,7 +60,7 @@ public class EasyWumpusWorldForNeuralNetwork {
            Worldmap.set(47+arrayvalue+arrayvaluex+1, (float)1);
         
            
-             for(int i = 0;i<4;i++)
+        for(int i = 0;i<4;i++)
         {
            Worldmap.set(63+i+1, (float)0); 
         }
@@ -134,3 +137,5 @@ public class EasyWumpusWorldForNeuralNetwork {
 
 
 }
+
+

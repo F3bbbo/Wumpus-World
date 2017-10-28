@@ -22,7 +22,7 @@ public class MyAgent implements Agent,Comparable<MyAgent>
     private NeuralNetwork brain;
     private int bestScore;
     int rnd;
-    EasyWumpusWorldForNeuralNetwork Wumpusworld; 
+    WorldModel Wumpusworld; 
     /**
      * Creates a new instance of your solver agent.
      * 
@@ -31,7 +31,7 @@ public class MyAgent implements Agent,Comparable<MyAgent>
     public MyAgent(World world)
     {
         w = world;   
-        Wumpusworld= new EasyWumpusWorldForNeuralNetwork();
+        Wumpusworld= new WorldModel();
         brain = new NeuralNetwork(INPUTLAYERSIZE, OUTPUTSIZE);
         bestScore = -Integer.MAX_VALUE;
     }
@@ -40,7 +40,7 @@ public class MyAgent implements Agent,Comparable<MyAgent>
     {
     	w = null;
     	brain = new NeuralNetwork(INPUTLAYERSIZE, OUTPUTSIZE);;
-    	Wumpusworld =  new EasyWumpusWorldForNeuralNetwork();
+    	Wumpusworld =  new WorldModel();
     	bestScore = -Integer.MAX_VALUE;
     }
     
@@ -48,7 +48,7 @@ public class MyAgent implements Agent,Comparable<MyAgent>
     {
     	w = null;
     	brain = nn;
-    	Wumpusworld = new EasyWumpusWorldForNeuralNetwork();
+    	Wumpusworld = new WorldModel();
     	bestScore = -Integer.MAX_VALUE;
     	
     }
@@ -57,14 +57,14 @@ public class MyAgent implements Agent,Comparable<MyAgent>
     public MyAgent(World world, NeuralNetwork network) {
     	w = world;
     	brain = network;
-        Wumpusworld= new EasyWumpusWorldForNeuralNetwork();
+        Wumpusworld= new WorldModel();
     	bestScore = -Integer.MAX_VALUE;
     }
     
     public MyAgent(World world, String fileName) {
     	w = world;
     	readFromFile(fileName);
-        Wumpusworld = new EasyWumpusWorldForNeuralNetwork();
+        Wumpusworld = new WorldModel();
     	bestScore = -Integer.MAX_VALUE;
     }
     
@@ -187,7 +187,7 @@ public class MyAgent implements Agent,Comparable<MyAgent>
     
     public void reset()
     {
-    	Wumpusworld = new EasyWumpusWorldForNeuralNetwork();
+    	Wumpusworld = new WorldModel();
     }
     
     public void setWorld(World world)
