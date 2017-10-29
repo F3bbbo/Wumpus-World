@@ -68,6 +68,15 @@ public class MyAgent implements Agent,Comparable<MyAgent>
     	bestScore = -Integer.MAX_VALUE;
     }
     
+    public MyAgent(String fileName) {
+    	w = null;
+    	readFromFile(fileName);
+        Wumpusworld = new WorldModel();
+    	bestScore = -Integer.MAX_VALUE;
+    }
+    
+    
+    
     public NeuralNetwork breed(MyAgent other, double mutationRate) {
     	return brain.breed(other.brain, mutationRate);
     }

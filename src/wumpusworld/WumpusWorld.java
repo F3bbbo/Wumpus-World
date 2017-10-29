@@ -39,7 +39,11 @@ public class WumpusWorld {
         }
         if (option.equalsIgnoreCase("sim"))
         {
-            runSimulator();
+        	System.out.println("Untrained Neural Network:");
+            runSimulator(new MyAgent("BeginnerNeuralNetwork"));
+            System.out.println("\nTrained Neural Network:");
+            runSimulator(new MyAgent("TrainedNeuralNetwork"));
+            
         }
         if (option.equalsIgnoreCase("simdb"))
         {
@@ -67,8 +71,9 @@ public class WumpusWorld {
         double totScore = 0;
         for (int i = 0; i < maps.size(); i++)
         {
+        	MyAgent a = runTrainer(i);
             World w = maps.get(i).generateWorld();
-            totScore += (double)runSimulation(w);
+            totScore += (double)runSimulation(w, a);
         }
         totScore = totScore / (double)maps.size();
         System.out.println("Average score: " + totScore);
@@ -78,13 +83,13 @@ public class WumpusWorld {
      * Starts the program in simulator mode
      * with random maps.
      */
-    private void runSimulator()
+    private void runSimulator(MyAgent a)
     {
         double totScore = 0;
         for (int i = 0; i < 10; i++)
         {
             WorldMap w = MapGenerator.getRandomMap(i);
-            totScore += (double)runSimulation(w.generateWorld());
+            totScore += (double)runSimulation(w.generateWorld(), a);
         }
         totScore = totScore / (double)10;
         System.out.println("Average score: " + totScore);
@@ -97,12 +102,13 @@ public class WumpusWorld {
      * @param w Wumpus World
      * @return Achieved score
      */
-    private int runSimulation(World w)
+    private int runSimulation(World w, MyAgent a)
     {
         
         int actions = 0;
         //Agent a = new MyAgent(w, "BeginnerNeuralNetwork");
-        Agent a = new MyAgent(w, "TrainedNeuralNetwork");
+        //Agent a = new MyAgent(w, "TrainedNeuralNetwork");
+        a.setWorld(w);
         while (!w.gameOver() && actions < 10000)
         {
             a.doAction();
@@ -129,7 +135,7 @@ public class WumpusWorld {
         //Sort
         Collections.sort(pop, Collections.reverseOrder());
         int gen = 0;
-        while(pop.get(0).getBestScore() < 900)
+        while(pop.get(0).getBestScore() < 900 && gen < 20)
         {
 	        //Breed
 	        for(int i = 0;i+1 < PopulationSize; i+=2)
@@ -149,7 +155,7 @@ public class WumpusWorld {
 	        	pop.remove(i);
 	        }
 	        gen++;
-	        System.out.println("Gen: " + gen + " Score: " + pop.get(0).getBestScore());
+	        //System.out.println("Gen: " + gen + " Score: " + pop.get(0).getBestScore());
         }
         return pop.get(0);    
     }
@@ -224,7 +230,6 @@ public class WumpusWorld {
             totScore += (double)runTrainingSim(w.generateWorld(), a);
         }
         totScore = totScore / (double)10;
-        //System.out.println("Average score: " + totScore);
         return ((int) totScore);
     }
     
