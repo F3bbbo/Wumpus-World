@@ -34,7 +34,7 @@ public class WumpusWorld {
         
         if (option.equalsIgnoreCase("gui"))
         {
-        	//runTrainerRandom();
+        	runTrainerRandom();
             showGUI();
         }
         if (option.equalsIgnoreCase("sim"))

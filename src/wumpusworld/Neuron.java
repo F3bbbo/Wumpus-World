@@ -22,7 +22,7 @@ public class Neuron implements Serializable {
 	
 	private float binVal(float x)
 	{
-		return ((x>1) ? 1.0f : 0.0f);
+		return ((x>0) ? 1.0f : 0.0f);
 	}
 	
 	public Neuron() {
