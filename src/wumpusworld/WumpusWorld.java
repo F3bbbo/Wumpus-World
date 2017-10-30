@@ -42,8 +42,7 @@ public class WumpusWorld {
         	System.out.println("Untrained Neural Network:");
             runSimulator(new MyAgent("BeginnerNeuralNetwork"));
             System.out.println("\nTrained Neural Network:");
-            runSimulator(new MyAgent("TrainedNeuralNetwork"));
-            
+            runSimulator(new MyAgent("TrainedNeuralNetwork"));           
         }
         if (option.equalsIgnoreCase("simdb"))
         {
@@ -103,11 +102,8 @@ public class WumpusWorld {
      * @return Achieved score
      */
     private int runSimulation(World w, MyAgent a)
-    {
-        
+    {        
         int actions = 0;
-        //Agent a = new MyAgent(w, "BeginnerNeuralNetwork");
-        //Agent a = new MyAgent(w, "TrainedNeuralNetwork");
         a.setWorld(w);
         while (!w.gameOver() && actions < 10000)
         {
@@ -172,9 +168,8 @@ public class WumpusWorld {
         	MyAgent a = new MyAgent();
         	for(int j = 0; j < NumberOfMaps; j++)
     	    {
-        		int rndNum = j;//(int)(Math.random()*100000);
+        		int rndNum = j;
         		World w = MapGenerator.getRandomMap(rndNum).generateWorld();
-        		//a.setWorld(w);
         		score += runTrainingSim(w, a);
     	    }
         	a.setBestScore(score/NumberOfMaps);
@@ -198,9 +193,8 @@ public class WumpusWorld {
 	        	MyAgent a = new MyAgent(nn);
 	        	for(int j = 10; j < (NumberOfMaps+10); j++)
 	        	{
-	        		int rndNum = j;// (int)(Math.random()*100000);
+	        		int rndNum = j;
 		        	World ww = MapGenerator.getRandomMap(rndNum).generateWorld();
-		        	//a.setWorld(ww);
 		        	score += runTrainingSim(ww, a);
 	        	}
 	        	a.setBestScore(score/NumberOfMaps);
